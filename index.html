@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybee - Premium Electronics Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Edit Mode Toggle -->
+    <div id="editToggle" class="edit-toggle" style="display: none;">
+        <button id="editModeBtn" onclick="toggleEditMode()">Edit Mode: OFF</button>
+    </div>
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <span id="topBarText" class="editable-text" data-field="topBarText">Free shipping on orders over 50</span>
+                <div class="top-links">
+                    <a href="#" class="editable-text" data-field="supportLink">Support</a>
+                    <a href="#" class="editable-text" data-field="trackOrderLink">Track Order</a>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo" id="siteLogo">
+                    <i class="fas fa-bolt editable-icon" id="logoIcon" data-field="logoIcon"></i>
+                    <span id="logoText" class="editable-text" data-field="logoText">Cybee</span>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search products...">
+                    <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="nav-tabs">
+                    <button class="nav-tab active" onclick="showTab('home')">Home</button>
+                    <button class="nav-tab" onclick="showTab('products')">Products</button>
+                    <button class="nav-tab" onclick="showTab('offers')">Offers</button>
+                    <button class="cart-tab" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount">0</span>
+                    </button>
+                    <button class="nav-tab" onclick="showLogin()" id="loginBtn">Login</button>
+                    <button class="nav-tab" onclick="logout()" id="logoutBtn" style="display: none;">Logout</button>
+                    <button class="nav-tab" onclick="window.open('admin.html', '_blank')" id="adminBtn" style="display: none;">Admin Panel</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <div id="homeTab" class="tab-content active">
+            <section id="hero" class="editable-background" data-field="backgroundImage">
+                <div class="hero-content">
+                    <h1 id="heroTitle" class="editable-text" data-field="heroTitle">Premium Electronics</h1>
+                    <p id="heroSubtitle" class="editable-text" data-field="heroSubtitle">Discover cutting-edge technology at unbeatable prices</p>
+                    <button class="cta-btn editable-text" id="heroButton" data-field="heroButtonText" onclick="showTab('products')">Shop Now</button>
+                </div>
+                <div class="hero-image editable-container" data-field="heroImageContainer">
+                    <img id="heroImage" class="editable-image" data-field="heroImage" src="" alt="Electronics">
+                </div>
+            </section>
+
+            <section id="categories" class="editable-container" data-field="categoriesSection">
+                <div class="container editable-container" data-field="categoriesContainer">
+                    <h2 class="editable-text" data-field="categoryTitle">Shop by Category</h2>
+                    <div class="categories-grid editable-container" data-field="categoriesGrid">
+                        <div class="category-card editable-container" data-field="laptopCard" onclick="showTab('products'); filterProducts('laptops')">
+                            <i class="fas fa-laptop editable-icon" data-field="laptopIcon"></i>
+                            <h3 class="editable-text" data-field="laptopCategory">Laptops</h3>
+                        </div>
+                        <div class="category-card editable-container" data-field="phoneCard" onclick="showTab('products'); filterProducts('phones')">
+                            <i class="fas fa-mobile-alt editable-icon" data-field="phoneIcon"></i>
+                            <h3 class="editable-text" data-field="phoneCategory">Smartphones</h3>
+                        </div>
+                        <div class="category-card editable-container" data-field="accessoryCard" onclick="showTab('products'); filterProducts('accessories')">
+                            <i class="fas fa-headphones editable-icon" data-field="accessoryIcon"></i>
+                            <h3 class="editable-text" data-field="accessoryCategory">Accessories</h3>
+                        </div>
+                        <div class="category-card editable-container" data-field="allProductsCard" onclick="showTab('products'); filterProducts('all')">
+                            <i class="fas fa-th editable-icon" data-field="allProductsIcon"></i>
+                            <h3 class="editable-text" data-field="allProductsCategory">All Products</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="home-offers" class="editable-background" data-field="homeOffersBackground" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4rem 0; margin: 2rem 0;">
+                <div class="container">
+                    <h2 class="editable-text" data-field="homeOffersTitle" style="color: white; text-align: center; margin-bottom: 2rem;">Special Offers</h2>
+                    <div class="offers-grid" id="home-offers-container">
+                        <!-- Offers will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="home-products" class="editable-background" data-field="homeProductsBackground" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 4rem 0; margin: 2rem 0;">
+                <div class="container">
+                    <h2 class="editable-text" data-field="homeProductsTitle" style="color: white; text-align: center; margin-bottom: 2rem;">Featured Products</h2>
+                    <div class="products-grid" id="home-products-container">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="offersTab" class="tab-content">
+            <section id="offers" class="editable-background" data-field="offersTabBackground" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); min-height: 100vh; padding: 2rem 0;">
+                <div class="container">
+                    <h2 class="editable-text" data-field="offersTitle" style="color: white; text-align: center; margin-bottom: 2rem;">Special Offers</h2>
+                    <div class="offers-grid" id="offers-container">
+                        <!-- Offers will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="productsTab" class="tab-content">
+            <section id="products" class="editable-background" data-field="productsTabBackground" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); min-height: 100vh; padding: 2rem 0;">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h2 class="editable-text" data-field="productsTitle" style="color: white; text-align: center;">Featured Products</h2>
+                        <div class="filters" style="text-align: center; margin-top: 1rem;">
+                            <select id="sortSelect" onchange="sortProducts()" style="padding: 0.5rem; border-radius: 5px; border: none;">
+                                <option value="name">Sort by Name</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="products-grid" id="products-container">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="editable-text" data-field="cartTitle">Shopping Cart</h3>
+            <button onclick="toggleCart()" class="close-cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: ₹<span id="cartTotal">0.00</span></strong>
+            </div>
+            <button class="checkout-btn editable-text" data-field="checkoutButton" onclick="showCheckout()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your account</p>
+            </div>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+                <p class="form-footer">Don't have an account? <a href="#" onclick="switchModal('signupModal')">Sign up</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <p>Join Cybee today</p>
+            </div>
+            <div id="signupError" class="error-message" style="display: none;"></div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <input type="text" id="signupName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="signupEmail" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signupPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+                <p class="form-footer">Already have an account? <a href="#" onclick="switchModal('loginModal')">Sign in</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content checkout-modal">
+            <span class="close" onclick="closeModal('checkoutModal')">&times;</span>
+            <h2>Checkout</h2>
+            <form id="checkoutForm">
+                <div class="checkout-section">
+                    <h3>Shipping Information</h3>
+                    <div class="form-row">
+                        <input type="text" id="firstName" placeholder="First Name" required>
+                        <input type="text" id="lastName" placeholder="Last Name" required>
+                    </div>
+                    <input type="text" id="address" placeholder="Address" required>
+                    <div class="form-row">
+                        <input type="text" id="city" placeholder="City" required>
+                        <input type="text" id="zipCode" placeholder="ZIP Code" required>
+                    </div>
+                </div>
+                <div class="checkout-section">
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <label><input type="radio" name="payment" value="card" checked> Credit Card</label>
+                        <label><input type="radio" name="payment" value="paypal"> PayPal</label>
+                    </div>
+                </div>
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div id="checkoutItems"></div>
+                    <div class="total-line">Total: ₹<span id="checkoutTotal">0.00</span></div>
+                </div>
+                <button type="submit" class="btn-primary">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('profileModal')">&times;</span>
+            <h2>My Profile</h2>
+            <div class="profile-tabs">
+                <button class="tab-btn active" onclick="showProfileTab('orders')">Orders</button>
+                <button class="tab-btn" onclick="showProfileTab('profile')">Profile</button>
+            </div>
+            <div id="ordersTab" class="tab-content active">
+                <div id="userOrders"><!-- Orders will be loaded here --></div>
+            </div>
+            <div id="profileTab" class="tab-content">
+                <form id="profileForm">
+                    <input type="text" id="profileName" placeholder="Full Name">
+                    <input type="email" id="profileEmail" placeholder="Email" readonly>
+                    <button type="submit">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Cybee</h3>
+                    <p>Your trusted electronics partner</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Shipping Info</a>
+                    <a href="#">Returns</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Cybee. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2 id="editModalTitle">Edit Element</h2>
+            <form id="editForm">
+                <input type="hidden" id="editField">
+                <div id="editContent"></div>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

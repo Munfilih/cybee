@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Cybee Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-bolt"></i>
+                <span>Cybee Admin</span>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab" onclick="window.open('index.html', '_blank')">View Site</button>
+                <button class="nav-tab" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('products')">Manage Products</a></li>
+                <li><a href="#" onclick="showSection('categories')">Manage Categories</a></li>
+                <li><a href="#" onclick="showSection('offers')">Manage Offers</a></li>
+                <li><a href="#" onclick="showSection('settings')">Site Settings</a></li>
+                <li><a href="#" onclick="showSection('users')">Users</a></li>
+                <li><a href="#" onclick="showSection('orders')">Orders</a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-main">
+            <section id="dashboard" class="admin-section active">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Products</h3>
+                        <p id="totalProducts">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <p id="totalUsers">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Offers</h3>
+                        <p id="totalOffers">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Orders</h3>
+                        <p id="totalOrders">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="products" class="admin-section">
+                <h2>Manage Products</h2>
+                <button onclick="showAddProduct()" class="btn-primary admin-btn">Add New Product</button>
+                <div id="productsList" class="admin-list">
+                    <!-- Products list will be loaded here -->
+                </div>
+            </section>
+
+            <section id="categories" class="admin-section">
+                <h2>Manage Categories</h2>
+                <button onclick="showAddCategory()" class="btn-primary admin-btn">Add New Category</button>
+                <div id="categoriesList" class="admin-list">
+                    <!-- Categories list will be loaded here -->
+                </div>
+            </section>
+
+            <section id="offers" class="admin-section">
+                <h2>Manage Offers</h2>
+                <button onclick="showAddOffer()" class="btn-primary admin-btn">Add New Offer</button>
+                <div id="offersList" class="admin-list">
+                    <!-- Offers list will be loaded here -->
+                </div>
+            </section>
+
+            <section id="users" class="admin-section">
+                <h2>Users</h2>
+                <div id="usersList" class="admin-list">
+                    <!-- Users list will be loaded here -->
+                </div>
+            </section>
+
+            <section id="settings" class="admin-section">
+                <h2>Site Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <h3>Site Logo</h3>
+                        <input type="text" id="logoTextInput" placeholder="Logo Text">
+                        <input type="text" id="logoIconInput" placeholder="Font Awesome Icon (e.g., fas fa-bolt)">
+                        <button onclick="updateLogo()" class="btn-primary">Update Logo</button>
+                    </div>
+                    <div class="setting-card">
+                        <h3>Top Bar</h3>
+                        <input type="text" id="topBarInput" placeholder="Top bar message">
+                        <button onclick="updateTopBar()" class="btn-primary">Update Top Bar</button>
+                    </div>
+                    <div class="setting-card">
+                        <h3>Hero Section</h3>
+                        <input type="text" id="heroTitleInput" placeholder="Hero Title">
+                        <input type="text" id="heroSubtitleInput" placeholder="Hero Subtitle">
+                        <input type="text" id="heroButtonInput" placeholder="Button Text">
+                        <input type="url" id="heroImageInput" placeholder="Hero Image URL">
+                        <button onclick="updateHero()" class="btn-primary">Update Hero</button>
+                    </div>
+                    <div class="setting-card">
+                        <h3>Background Image</h3>
+                        <input type="url" id="backgroundUrl" placeholder="Enter background image URL">
+                        <button onclick="updateBackground()" class="btn-primary">Update Background</button>
+                        <div id="backgroundPreview" style="margin-top: 1rem;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="orders" class="admin-section">
+                <h2>Orders</h2>
+                <div id="ordersList" class="admin-list">
+                    <!-- Orders list will be loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content product-modal">
+            <span class="close" onclick="closeModal('addProductModal')">&times;</span>
+            <div class="modal-header">
+                <h2>Add New Product</h2>
+                <p>Fill in the product details</p>
+            </div>
+            <form id="addProductForm">
+                <div class="form-section">
+                    <h3>Basic Information</h3>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="productName" placeholder="Enter product name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="productDescription" placeholder="Product description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price (₹)</label>
+                            <input type="number" id="productPrice" placeholder="0.00" step="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Quantity</label>
+                            <input type="number" id="productStock" placeholder="0" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Discount (%)</label>
+                            <input type="number" id="productDiscount" placeholder="0" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Final Price (₹)</label>
+                            <input type="number" id="finalPrice" placeholder="Auto calculated" readonly>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Product Images</h3>
+                    <div class="image-upload-section">
+                        <div class="upload-options">
+                            <label class="upload-btn">
+                                <i class="fas fa-upload"></i>
+                                Upload Images
+                                <input type="file" id="productImageFile" accept="image/*" multiple style="display: none;">
+                            </label>
+                            <span>or</span>
+                            <input type="url" id="productImageUrl" placeholder="Enter image URL">
+                            <button type="button" onclick="addImageUrl()" class="btn-add-url">Add URL</button>
+                        </div>
+                        <div id="imagePreview" class="images-preview">
+                            <!-- Multiple image previews will appear here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Category & Placement</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="productCategory" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Display Priority</label>
+                            <select id="productPriority">
+                                <option value="1">High (Show First)</option>
+                                <option value="2" selected>Medium</option>
+                                <option value="3">Low (Show Last)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Featured Product</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="productFeatured">
+                            <label for="productFeatured">Display in featured section</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Offer Modal -->
+    <div id="addOfferModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addOfferModal')">&times;</span>
+            <h2>Add Offer</h2>
+            <form id="addOfferForm">
+                <input type="text" id="offerTitle" placeholder="Offer Title" required>
+                <textarea id="offerDescription" placeholder="Description" required></textarea>
+                <input type="number" id="offerDiscount" placeholder="Discount %" min="1" max="100" required>
+                <input type="url" id="offerImage" placeholder="Image URL" required>
+                <button type="submit">Add Offer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addCategoryModal')">&times;</span>
+            <h2>Add Category</h2>
+            <form id="addCategoryForm">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="categoryName" placeholder="Enter category name" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editCategoryModal')">&times;</span>
+            <h2>Edit Category</h2>
+            <form id="editCategoryForm">
+                <input type="hidden" id="editCategoryId">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="editCategoryName" placeholder="Enter category name" required>
+                </div>
+                <button type="submit" class="btn-primary">Update Category</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
